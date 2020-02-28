@@ -1,0 +1,25 @@
+import spotify from "./Spotify";
+import renderAlbumInfo from "./AlbumInfo";
+import renderAlbumTracks from "./AlbumTracks";
+
+const listAlbums = document.getElementById("album-list");
+const albumInfo = document.getElementById("album-info");
+const albumTracks = document.getElementById("album-tracks");
+
+export default function searchEnterTrigger() {
+  listAlbums.addEventListener("click", e => {
+    const target = e.target;
+
+    e.preventDefault();
+    makeRequest(target.getAttribute("data-album-id"));
+  });
+}
+
+function makeRequest(albumId) {
+  spotify.album
+    .getAlbum(albumId)
+    .then(data => renderAlbumInfo(data, albumInfo))
+    .then(data => {
+      renderAlbumTracks(data.tracks.items, albumTracks);
+    });
+}
